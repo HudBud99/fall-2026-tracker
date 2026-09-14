@@ -1,3 +1,6 @@
-HW Schedules
-
 .DS_Store
+
+# Schedule files stay on your computer (they often include names and grades).
+# Delete these two lines if your AI assistant needs them on GitHub; see README "Privacy".
+HW Schedules/*
+!HW Schedules/README.md
