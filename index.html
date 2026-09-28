@@ -87,10 +87,10 @@
   .item.done .icon-btn { font-size: 0.72rem; }
   .item.busywork:not(.done) { opacity: 0.82; }
   .late-flag { color: var(--late); display: inline-flex; align-items: center; flex: none; margin-right: -0.15rem; }
-  .item input[type=checkbox] { appearance: none; -webkit-appearance: none; width: 18px; height: 18px; margin-top: 0.15rem; flex: none; border: 1.5px solid var(--line-strong); border-radius: 4px; cursor: pointer; background: var(--paper); position: relative; }
-  .item input[type=checkbox]:checked { background: var(--ink); border-color: var(--ink); }
-  .item input[type=checkbox]:checked::after { content: ""; position: absolute; left: 5px; top: 1px; width: 5px; height: 10px; border: solid var(--paper); border-width: 0 2px 2px 0; transform: rotate(45deg); }
-  .item input[type=checkbox]:focus-visible { outline: 2px solid var(--today); outline-offset: 2px; }
+  .item input[type=checkbox], .ck-item input[type=checkbox] { appearance: none; -webkit-appearance: none; width: 18px; height: 18px; margin-top: 0.15rem; flex: none; border: 1.5px solid var(--line-strong); border-radius: 4px; cursor: pointer; background: var(--paper); position: relative; }
+  .item input[type=checkbox]:checked, .ck-item input[type=checkbox]:checked { background: var(--ink); border-color: var(--ink); }
+  .item input[type=checkbox]:checked::after, .ck-item input[type=checkbox]:checked::after { content: ""; position: absolute; left: 5px; top: 1px; width: 5px; height: 10px; border: solid var(--paper); border-width: 0 2px 2px 0; transform: rotate(45deg); }
+  .item input[type=checkbox]:focus-visible, .ck-item input[type=checkbox]:focus-visible { outline: 2px solid var(--today); outline-offset: 2px; }
   .item-body { flex: 1; min-width: 0; }
   .title { font-size: 0.98rem; }
   .meta { font-size: 0.8rem; color: var(--ink-soft); margin-top: 0.05rem; display: flex; flex-wrap: wrap; gap: 0.5rem; align-items: center; }
@@ -125,10 +125,51 @@
   footer.foot { margin-top: 2.5rem; padding-top: 1.2rem; border-top: 1px solid var(--line); font-size: 0.78rem; color: var(--ink-soft); }
   footer.foot button { font: inherit; font-size: 0.78rem; color: var(--today); background: none; border: none; text-decoration: underline; cursor: pointer; }
 
+
+  /* layout: main column + daily checklist sidebar */
+  #app.wrap { max-width: 1220px; display: grid; grid-template-columns: minmax(0,1fr); grid-template-areas: "head" "side" "main"; column-gap: 2.5rem; }
+  #app > header.top { grid-area: head; }
+  #app > .main-col { grid-area: main; min-width: 0; }
+  #app > .side { grid-area: side; }
+  @media (min-width: 1100px) {
+    #app.wrap { grid-template-columns: minmax(0,1fr) 290px; grid-template-areas: "head side" "main side"; }
+    #app > .side { position: sticky; top: 4rem; align-self: start; margin-top: 4rem; max-height: calc(100vh - 5rem); overflow-y: auto; }
+  }
+
+  .side { background: #fdfbf6; border: 1px solid var(--line); border-radius: 8px; padding: 0.9rem 1rem 1rem; margin-bottom: 1.6rem; }
+  .side-head { display: flex; align-items: baseline; justify-content: space-between; }
+  .side h2 { font-size: 1.05rem; font-weight: 600; }
+  .ck-count { font-size: 0.8rem; color: var(--ink-soft); font-variant-numeric: tabular-nums; }
+  .ck-nav { display: flex; align-items: center; gap: 0.2rem; margin: 0.35rem 0 0.6rem; padding-bottom: 0.55rem; border-bottom: 1px solid var(--line); }
+  .ck-nav .icon-btn { font-size: 1.05rem; line-height: 1; padding: 0.1rem 0.45rem; }
+  .ck-date { font-size: 0.9rem; }
+  .ck-date.is-today { color: var(--today); font-weight: 600; }
+  #ckToday { margin-left: auto; }
+  .ck-list { list-style: none; }
+  .ck-item { display: flex; align-items: center; gap: 0.4rem; padding: 0.25rem 0.3rem; border-radius: 4px; }
+  .ck-item:hover { background: #f4f1e9; }
+  .ck-item label { display: flex; align-items: center; gap: 0.55rem; flex: 1; min-width: 0; cursor: pointer; }
+  .ck-item input[type=checkbox] { width: 16px; height: 16px; margin-top: 0; }
+  .ck-item input[type=checkbox]:checked::after { left: 4.5px; top: 1px; width: 4px; height: 9px; }
+  .ck-title { font-size: 0.9rem; overflow-wrap: anywhere; }
+  .ck-item.done .ck-title { text-decoration: line-through; color: var(--ink-soft); }
+  .ck-rep { font-size: 0.66rem; color: var(--ink-soft); border: 1px solid var(--line-strong); border-radius: 3px; padding: 0 0.3rem; flex: none; }
+  .ck-actions { display: flex; flex: none; opacity: 0; transition: opacity .12s; }
+  .ck-item:hover .ck-actions, .ck-item:focus-within .ck-actions { opacity: 1; }
+  .ck-empty { font-size: 0.85rem; color: var(--ink-soft); font-style: italic; padding: 0.2rem 0.3rem; }
+  .ck-carry { margin-top: 0.35rem; }
+  .ck-carry .toggle { font-size: 0.8rem; padding: 0; }
+  .ck-add { margin-top: 0.7rem; display: flex; flex-wrap: wrap; gap: 0.45rem; align-items: center; }
+  .ck-add input[type=text] { flex: 1 1 140px; min-width: 0; font: inherit; font-size: 0.88rem; padding: 0.38rem 0.5rem; border: 1px solid var(--line-strong); border-radius: 4px; background: var(--paper); color: var(--ink); }
+  .ck-add .btn { padding: 0.36rem 0.75rem; }
+  .ck-add .checkline { flex-basis: 100%; }
+  .ck-setup { font-size: 0.82rem; color: var(--ink-soft); }
+  .ck-setup code { display: block; font-size: 0.75rem; background: #f4f1e9; border: 1px solid var(--line); border-radius: 4px; padding: 0.4rem 0.5rem; margin: 0.4rem 0; overflow-wrap: anywhere; user-select: all; }
+
   @media (max-width: 560px) {
     header.top h1 { font-size: 1.6rem; }
     .fab { top: 0.6rem; right: 0.6rem; font-size: 0.8rem; padding: 0.42rem 0.7rem; }
-    .item-actions { opacity: 1; }
+    .item-actions, .ck-actions { opacity: 1; }
     .field.time-f, .field.class-f { flex: 1 1 45%; }
   }
   @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
@@ -168,6 +209,26 @@
     <div class="dash" id="dash"></div>
   </header>
 
+  <aside class="side" id="side" aria-label="Daily checklist">
+    <div class="side-head"><h2>Checklist</h2><span class="ck-count" id="ckCount"></span></div>
+    <div class="ck-nav">
+      <button class="icon-btn" id="ckPrev" aria-label="Previous day">&lsaquo;</button>
+      <span class="ck-date" id="ckDate"></span>
+      <button class="icon-btn" id="ckNext" aria-label="Next day">&rsaquo;</button>
+      <button class="toggle" id="ckToday">Today</button>
+    </div>
+    <div id="ckBody">
+      <ul class="ck-list" id="ckList"></ul>
+      <div class="ck-carry" id="ckCarry"></div>
+      <form class="ck-add" id="ckAdd" autocomplete="off">
+        <input type="text" id="ckInput" placeholder="Add something…" aria-label="New checklist item">
+        <button class="btn primary" type="submit">Add</button>
+        <label class="checkline"><input type="checkbox" id="ckRepeat"> Repeat every day</label>
+      </form>
+    </div>
+  </aside>
+
+  <div class="main-col">
   <div class="controls">
     <div class="filter-classes" id="filterClasses"></div>
     <span class="spacer"></span>
@@ -184,6 +245,7 @@
     Your list is stored in your Supabase project and shared across every device that unlocks with your password.
     <br><button id="forgetBtn">Forget this device</button> · <button id="resetBtn">Reset to the original imported list</button>
   </footer>
+  </div>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -508,7 +570,7 @@ function tryUnlock(){
 
 function enterApp(){
   lockEl.style.display="none";
-  appEl.style.display="block";
+  appEl.style.display="";
   initSupabase();
   loadFilters();
   boot();
@@ -535,6 +597,7 @@ async function boot(){
     } else {
       items = stored;
     }
+    await loadChecklist();
     setSync("ok","Saved");
     render();
   } catch(e){
@@ -564,6 +627,7 @@ async function refreshFromServer(){
     const { data, error } = await sb.from("tracker").select("data").eq("id", ROW_ID).single();
     if (error) throw error;
     items = data.data || [];
+    await loadChecklist();
     setSync("ok","Saved");
     render();
   } catch(e){ setSync("error","Refresh failed"); console.error(e); }
@@ -582,6 +646,33 @@ function setSync(state, text){
   }
 }
 
+// ---------- daily checklist storage (its own row, so assignment saves never touch it) ----------
+const CK_ROW_ID = "checklist";
+let checklist = { daily: [], days: {} };
+let ckReady = false, ckSaveTimer = null;
+
+function normalizeChecklist(c){
+  if (!c || typeof c!=="object" || Array.isArray(c)) c = {};
+  return { daily: Array.isArray(c.daily)?c.daily:[], days: (c.days && typeof c.days==="object")?c.days:{} };
+}
+async function loadChecklist(){
+  const { data, error } = await sb.from("tracker").select("data").eq("id", CK_ROW_ID).maybeSingle();
+  if (error){ console.error(error); ckReady=false; return; }
+  ckReady = !!data;
+  checklist = normalizeChecklist(data && data.data);
+}
+function scheduleCkSave(){
+  setSync("saving","Saving…");
+  clearTimeout(ckSaveTimer);
+  ckSaveTimer = setTimeout(async ()=>{
+    try {
+      const { error } = await sb.from("tracker").update({ data: checklist, updated_at: new Date().toISOString() }).eq("id", CK_ROW_ID);
+      if (error) throw error;
+      setSync("ok","Saved");
+    } catch(e){ setSync("error","Save failed — retry"); console.error(e); }
+  }, 400);
+}
+
 function uid(){ return "u-"+Date.now()+"-"+Math.random().toString(36).slice(2,7); }
 
 // ---------- dates ----------
@@ -590,7 +681,9 @@ const DOW=["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday
 function parseDate(d){ const[y,m,day]=d.split("-").map(Number); return new Date(y,m-1,day); }
 function fmtDate(d){ const dt=parseDate(d); return MONTHS[dt.getMonth()]+" "+dt.getDate(); }
 function fmtDow(d){ return DOW[parseDate(d).getDay()]; }
-function todayStr(){ const n=new Date(); return n.getFullYear()+"-"+String(n.getMonth()+1).padStart(2,"0")+"-"+String(n.getDate()).padStart(2,"0"); }
+function ymd(dt){ return dt.getFullYear()+"-"+String(dt.getMonth()+1).padStart(2,"0")+"-"+String(dt.getDate()).padStart(2,"0"); }
+function todayStr(){ return ymd(new Date()); }
+function shiftDate(d,n){ const dt=parseDate(d); dt.setDate(dt.getDate()+n); return ymd(dt); }
 function clsInfo(name){ return CLASSES[name]||CLASSES["Other"]; }
 
 // ---------- render ----------
@@ -598,7 +691,7 @@ const listEl=document.getElementById("list");
 const dashEl=document.getElementById("dash");
 const filterEl=document.getElementById("filterClasses");
 
-function render(){ renderDash(); renderFilters(); renderList(); }
+function render(){ renderDash(); renderFilters(); renderList(); renderChecklist(); }
 
 function renderDash(){
   const total=items.length, done=items.filter(i=>i.done).length;
@@ -754,6 +847,102 @@ document.getElementById("resetBtn").addEventListener("click",async()=>{
     render(); scheduleSave();
   }
 });
+
+// ---------- daily checklist ----------
+const ckListEl=document.getElementById("ckList");
+const ckBodyEl=document.getElementById("ckBody");
+let ckDate=todayStr();
+
+function ckDay(d, create){
+  let day=checklist.days[d];
+  if(!day && create) day=checklist.days[d]={items:[],doneDaily:[]};
+  return day||{items:[],doneDaily:[]};
+}
+function dailyFor(d){ return checklist.daily.filter(x=>x.from<=d&&(!x.until||d<=x.until)); }
+
+function renderChecklist(){
+  const d=ckDate, today=todayStr();
+  const dt=parseDate(d);
+  const dateEl=document.getElementById("ckDate");
+  dateEl.textContent=DOW[dt.getDay()].slice(0,3)+", "+fmtDate(d)+(d===today?" · today":"");
+  dateEl.className="ck-date"+(d===today?" is-today":"");
+  document.getElementById("ckToday").hidden = d===today;
+  if(!ckReady){
+    document.getElementById("ckCount").textContent="";
+    ckBodyEl.hidden=true;
+    let note=document.getElementById("ckSetup");
+    if(!note){
+      note=document.createElement("div"); note.id="ckSetup"; note.className="ck-setup";
+      note.innerHTML=`One-time setup: in Supabase, open the SQL Editor, run this line, then press Refresh.<code>insert into public.tracker (id, data) values ('checklist', '{}');</code>`;
+      ckBodyEl.after(note);
+    }
+    return;
+  }
+  const oldNote=document.getElementById("ckSetup"); if(oldNote) oldNote.remove();
+  ckBodyEl.hidden=false;
+  const day=ckDay(d);
+  const rows=[
+    ...dailyFor(d).map(x=>({id:x.id,title:x.title,done:day.doneDaily.includes(x.id),daily:true})),
+    ...day.items.map(x=>({...x,daily:false})),
+  ];
+  const done=rows.filter(r=>r.done).length;
+  document.getElementById("ckCount").textContent=rows.length?`${done}/${rows.length} done`:"";
+  ckListEl.innerHTML=rows.length?rows.map(r=>`<li class="ck-item${r.done?" done":""}" data-id="${r.id}" data-daily="${r.daily}">
+      <label><input type="checkbox" ${r.done?"checked":""} data-ck="toggle"><span class="ck-title">${escapeHtml(r.title)}</span></label>
+      ${r.daily?`<span class="ck-rep" title="Repeats every day">daily</span>`:""}
+      <span class="ck-actions">${r.daily?"":`<button class="icon-btn" data-ck="move" title="Move to next day" aria-label="Move to next day">&rarr;</button>`}<button class="icon-btn" data-ck="delete" title="Remove" aria-label="Remove">&times;</button></span>
+    </li>`).join(""):`<li class="ck-empty">Nothing on this day yet.</li>`;
+  const prev=shiftDate(d,-1), left=ckDay(prev).items.filter(x=>!x.done);
+  document.getElementById("ckCarry").innerHTML=left.length?`<button class="toggle" data-ck="carry">Bring over ${left.length} unfinished from ${fmtDate(prev)}</button>`:"";
+}
+
+ckListEl.addEventListener("change",e=>{
+  if(e.target.dataset.ck!=="toggle")return;
+  const li=e.target.closest(".ck-item"), id=li.dataset.id, day=ckDay(ckDate,true);
+  if(li.dataset.daily==="true"){
+    day.doneDaily=day.doneDaily.filter(x=>x!==id);
+    if(e.target.checked) day.doneDaily.push(id);
+  } else {
+    const it=day.items.find(x=>x.id===id); if(it) it.done=e.target.checked;
+  }
+  renderChecklist(); scheduleCkSave();
+});
+document.getElementById("side").addEventListener("click",e=>{
+  const btn=e.target.closest("button[data-ck]"); if(!btn)return;
+  const act=btn.dataset.ck, day=ckDay(ckDate,true);
+  const li=btn.closest(".ck-item"), id=li&&li.dataset.id;
+  if(act==="delete"){
+    if(li.dataset.daily==="true"){
+      const x=checklist.daily.find(x=>x.id===id);
+      if(!confirm(`Stop repeating "${x.title}" from ${fmtDate(ckDate)} on? Earlier days keep their checkmarks.`))return;
+      x.until=shiftDate(ckDate,-1);
+      if(x.until<x.from) checklist.daily=checklist.daily.filter(y=>y.id!==id);
+    } else {
+      day.items=day.items.filter(x=>x.id!==id);
+    }
+  } else if(act==="move"){
+    const it=day.items.find(x=>x.id===id);
+    day.items=day.items.filter(x=>x.id!==id);
+    ckDay(shiftDate(ckDate,1),true).items.push({...it,done:false});
+  } else if(act==="carry"){
+    const prevDay=ckDay(shiftDate(ckDate,-1),true);
+    day.items.push(...prevDay.items.filter(x=>!x.done));
+    prevDay.items=prevDay.items.filter(x=>x.done);
+  } else return;
+  renderChecklist(); scheduleCkSave();
+});
+document.getElementById("ckAdd").addEventListener("submit",e=>{
+  e.preventDefault();
+  const input=document.getElementById("ckInput"), rep=document.getElementById("ckRepeat");
+  const title=input.value.trim(); if(!title){input.focus();return;}
+  if(rep.checked) checklist.daily.push({id:uid(),title,from:ckDate});
+  else ckDay(ckDate,true).items.push({id:uid(),title,done:false});
+  input.value=""; rep.checked=false; input.focus();
+  renderChecklist(); scheduleCkSave();
+});
+document.getElementById("ckPrev").addEventListener("click",()=>{ ckDate=shiftDate(ckDate,-1); renderChecklist(); });
+document.getElementById("ckNext").addEventListener("click",()=>{ ckDate=shiftDate(ckDate,1); renderChecklist(); });
+document.getElementById("ckToday").addEventListener("click",()=>{ ckDate=todayStr(); renderChecklist(); });
 
 function saveFilters(){ try{ localStorage.setItem(FILTER_KEY,JSON.stringify({hidden:[...hiddenClasses],hideDone,hideBusy,condensed})); }catch(e){} }
 function loadFilters(){

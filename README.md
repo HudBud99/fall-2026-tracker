@@ -105,6 +105,7 @@ After each push, the site updates within a few minutes. If it doesn't, open the 
 - Check off assignments as you finish them. Changes save automatically.
 - **+ Add task** adds something that isn't in your schedules.
 - **Hide completed**, **Condensed view**, and **Hide daily items** change what you see on that device. Condensed view hides past days where everything is done. Daily items are small recurring things like attendance.
+- The **Checklist** panel (on the right on wide screens, above the list on phones) is a day-by-day to-do list for anything, not just classes. Use the arrows to move between days. Tick **Repeat every day** to add an item that shows up on every day from then on, **→** moves an item to the next day, and **Bring over** pulls in what's unfinished from the day before. It needs one extra row in Supabase: run `insert into public.tracker (id, data) values ('checklist', '{}');` in the SQL Editor.
 - **Reset to the original imported list** replaces your whole list with the imported assignments and clears every checkmark. You'll rarely want it.
 
 **When a class adds or changes assignments,** put the updated schedule in `HW Schedules`, keeping the old file too. Then ask your assistant to update the live list without losing your checkmarks. When it's done, reload the tracker on every device before checking anything off.
@@ -148,6 +149,7 @@ The user's live list is stored in Supabase, not in `index.html`. It's in table `
 
 - On load, the page reads `data`. **If `data` is empty, the page writes `SEED` into it**, giving each item `id: "seed-<index>"` and `done: false`. Otherwise it uses `data` and ignores `SEED`.
 - **Once `data` holds anything, editing `SEED` changes nothing the user sees.** The one exception is the Reset button, which replaces `data` with `SEED` and clears every checkmark.
+- The daily checklist lives in a separate row, `id = 'checklist'`, whose `data` is an object (`{daily: [...], days: {"YYYY-MM-DD": {items, doneDaily}}}`), not an array. Never write assignments into it, and leave it alone when updating the live list.
 - Every save replaces the entire `data` array, and the last write wins. A tab opened before you changed the database will overwrite your change the next time the user checks something off in it. After any direct database edit, tell the user to reload the tracker on every device before using it.
 
 ### `CLASSES`
